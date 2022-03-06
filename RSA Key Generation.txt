@@ -1,0 +1,83 @@
+Practical Assignment 8: Write code in C for RSA key generation.
+
+
+#include<stdio.h>
+#include<time.h>
+#include"../hdr/test.h"    //fake header just to satisfy my makefile
+
+//Receives: number that was generated in main
+//Returns: 1 for false, 0 for true
+//Purpose: checks if the numbers is prime and returns 1 or 0
+int isPrime(int number) 
+{
+    if (number <= 1) 
+        return 0;
+
+    int i;
+    for (i=2; i<number; i++) {
+        if (number % i == 0) 
+            return 0;
+    }
+    return 1;
+}
+
+/*Receives: an integer ((p-1) * (q-1))
+  Returns: integer (e)
+  Purpose: Generates the relatively prime number to ((p-1) * (q-1))*/
+int gen_E(int o)
+{
+    puts("Generating E...");
+    int e;
+    do {e = rand() % o;} while (GCD(e, o) != 1);
+    return e;
+}
+
+/*Receives: integer E and O from the main
+  Returns: newly calculated integer D
+  Purpose: Generates D for the private key*/
+int gen_D(int e, int o)
+{
+puts("Generating D...");
+int e = a;
+int o = b;
+int phin, d;
+for (phin = 1; phin < o; phin ++)
+    for (d = 1; d < 998001; d ++)
+        if ((e * d) == (o * phin) + 1) return d;
+}
+
+/*Receives: integer E and O from main
+  Returns: greatest common divisor's remainder
+  Purpose: Calculate if the two numbers share a divisor.*/    
+int GCD(int e, int o)
+{
+    int c;
+    while (e != 0) {
+        c = e; e = o%e; o = c;
+    }
+    return o;
+}
+int main()
+{
+    puts("Generating Prime P...");
+    srand(time(NULL));
+    int p = rand() % 1000;
+    while (isPrime(p) != 1) {
+        p = rand() % 1000;
+    }
+
+    puts("Generating Prime Q...");
+    int q = rand() % 1000;
+    while (isPrime(q) != 1) {
+        q = rand() % 1000;
+    }
+
+    int n = p * q;
+    int o = (p - 1) * (q - 1);
+    int e = gen_E(o);
+    int d = gen_D(e, o);
+
+    printf("p: %d\nq: %d\nn: %d\no: %d\ne: %d\nd: %d\n", p, q, n, o, e, d);
+    printf("KU = {%d, %d}\n", e, n);
+    printf("KR = {%d, %d}\n", d, n);
+}
